@@ -7,7 +7,8 @@ import {
 } from '@raycast/api'
 import tinyRelativeDate from 'tiny-relative-date'
 import { CopyInstallCommandActions } from './CopyInstallCommandActions'
-import { getChangeLogUrl, parseRepoUrl } from './utils/parseRepoUrl'
+import { parseRepoUrl } from './utils/parseRepoUrl'
+import { getChangeLogUrl } from './utils/getChangelogUrl'
 import { Readme } from './Readme'
 import { NpmObject } from './npmResponse.model'
 
