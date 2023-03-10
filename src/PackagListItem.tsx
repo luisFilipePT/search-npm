@@ -7,7 +7,7 @@ import {
 } from '@raycast/api'
 import tinyRelativeDate from 'tiny-relative-date'
 import { CopyInstallCommandActions } from './CopyInstallCommandActions'
-import { parseRepoUrl } from './utils/parseRepoUrl'
+import { getChangeLogUrl, parseRepoUrl } from './utils/parseRepoUrl'
 import { Readme } from './Readme'
 import { NpmObject } from './npmResponse.model'
 
@@ -21,7 +21,7 @@ const scoreToPercentage = (score: number): string => {
 }
 
 interface Preferences {
-  defaultOpenAction: 'openRepository' | 'openHomepage' | 'npmPackagePage'
+  defaultOpenAction: 'openRepository' | 'openHomepage' | 'openChangelog' | 'npmPackagePage'
 }
 
 export const PackageListItem = ({
@@ -31,6 +31,7 @@ export const PackageListItem = ({
   const { defaultOpenAction }: Preferences = getPreferenceValues()
   const pkg = result.package
   const { owner, name, type } = parseRepoUrl(pkg.links.repository)
+  const changelogUrl = getChangeLogUrl(type, owner, name);
 
   const openActions = {
     openRepository: pkg.links?.repository ? (
@@ -48,7 +49,14 @@ export const PackageListItem = ({
           title="Open Homepage"
           icon={Icon.Link}
         />
-      ) : null,
+    ) : null,
+    changelogPackagePage: changelogUrl ? (
+      <Action.OpenInBrowser
+        key="openChangelog"
+        url={changelogUrl}
+        title="Open changelog"
+      />
+    ) : null,
     npmPackagePage: (
       <Action.OpenInBrowser
         key="npmPackagePage"
@@ -140,18 +148,11 @@ export const PackageListItem = ({
                 shortcut={{ modifiers: ['cmd'], key: '.' }}
               />
             ) : null}
-            {type === 'github' || (type === 'gitlab' && owner && name) ? (
+             {type === 'github' || (type === 'gitlab' && owner && name) ? (
               <Action.OpenInBrowser
-                url={`https://codesandbox.io/s/${
-                  type === 'github' ? 'github' : 'gitlab'
-                }/${owner}/${name}`}
-                title="View in CodeSandbox"
-                icon={{
-                  source: {
-                    light: 'codesandbox-bright.png',
-                    dark: 'codesandbox-dark.png',
-                  },
-                }}
+                url={`https://github.com/${name}/${name}/releases`}
+                title="View changelog"
+                icon={Icon.List}
               />
             ) : null}
             <Action.OpenInBrowser
