@@ -38,4 +38,3 @@ export const parseRepoUrl = (repoUrl?: string): ParseRepoUrlResponse => {
     type: isGithubRepo ? 'github' : isGitlabRepo ? 'gitlab' : undefined,
   }
 }
-
